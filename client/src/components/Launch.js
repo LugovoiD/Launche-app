@@ -5,13 +5,13 @@ import { Link } from "react-router-dom";
 
 const LAUNCH_QUERY = gql`
     query LaunchQuery($flight_number: Int!) {
-        launch(flight_number: $flight_number) {
+        launch (flight_number: $flight_number) @rest(type: "LaunchType", path: "/launches/{args.flight_number}") {
             flight_number,
             mission_name,
             launch_year,
             launch_date_local,
             launch_success,
-            rocket { 
+            rocket @type(name: "rocket"){ 
                 rocket_id,
                 rocket_name,
                 rocket_type
@@ -31,7 +31,7 @@ export class Launch extends Component{
                     {
                         ({ loading, error, data }) => {
                             if(loading) return <h4>Loading...</h4>;
-                            if(error) console.log(error);
+                            if(error) return `Error! ${error.message}`;
                             const {
                                 mission_name,
                                 launch_year,
@@ -71,7 +71,5 @@ export class Launch extends Component{
         );
     }
 }
-
-
 
 export default Launch;
